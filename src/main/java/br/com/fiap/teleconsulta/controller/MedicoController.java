@@ -10,18 +10,15 @@ import jakarta.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/medicos")
-@Produces(MediaType.APPLICATION_JSON) // Define o formato de resposta padrão como JSON
-@Consumes(MediaType.APPLICATION_JSON) // Define o formato de entrada padrão como JSON
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class MedicoController {
 
-    private MedicoDAO medicoDAO; // Usado para buscas simples
-    private MedicoService medicoService; // Usado para operações com regras de negócio (POST, PUT, DELETE)
+    private MedicoDAO medicoDAO;
+    private MedicoService medicoService;
 
     public MedicoController() {
-        // 1. Instancia o DAO
         this.medicoDAO = new MedicoDAO();
-        // 2. Instancia o Service, injetando o DAO (seguindo o padrão do AlunoService)
-        // Nota: Assumimos que MedicoService precisa apenas do MedicoDAO, como PacienteService.
         this.medicoService = new MedicoService(medicoDAO);
     }
 
@@ -46,7 +43,7 @@ public class MedicoController {
         }
     }
 
-    // --- R (READ) - Buscar todos os Medicos ---
+    // --- R (READ) - Buscar todos os Medicos
     // GET /medicos
     @GET
     public Response buscarTodos() {
@@ -65,7 +62,7 @@ public class MedicoController {
                 .build();
     }
 
-    // --- R (READ) - Buscar Medico por CRM ---
+    // --- R (READ) - Buscar Medico por CRM
     // GET /medicos/{crm}
     @GET
     @Path("/{crm}")
@@ -85,24 +82,3 @@ public class MedicoController {
                 .build();
     }
 }
-
-
-
-    // --- U (UPDATE) - Atualizar um Medico existente ---
-    // PUT /medicos/{crm}
-
-    // --- D (DELETE) - Deletar um Medico por CRM ---
-    // DELETE /medicos/{crm}
-    //@DELETE
-    //@Path("/{crm}")
-    //public Response deletar(@PathParam("crm") String crm) {
-   //     boolean deletado = medicoService.deletar(crm);
-
-  //      if (!deletado) {
-   //         return Response.status(Response.Status.NOT_FOUND).entity("Médico com CRM " + crm + " não encontrado ou já deletado.").build();
-   //     }
-
-        // 204 No Content para deleção bem-sucedida
- //       return Response.status(Response.Status.NO_CONTENT).build();
-   // }
-//}
