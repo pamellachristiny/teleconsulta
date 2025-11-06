@@ -10,7 +10,6 @@ public class Consulta {
     private String status;
     private int duracao; // duração em minutos, por exemplo
 
-    // Construtor completo
     public Consulta(Paciente paciente, Medico medico, Timestamp dataHora, String status, int duracao) {
         this.paciente = paciente;
         this.medico = medico;
@@ -29,7 +28,6 @@ public class Consulta {
         this.duracao = duracao;
     }
 
-    // Getters e Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 

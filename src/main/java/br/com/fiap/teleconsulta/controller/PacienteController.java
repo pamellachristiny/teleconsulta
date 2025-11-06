@@ -10,27 +10,24 @@ import jakarta.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/pacientes")
-@Produces(MediaType.APPLICATION_JSON) // Define o formato de resposta padrão como JSON
+@Produces(MediaType.APPLICATION_JSON)
 public class PacienteController {
 
-    private PacienteDAO pacienteDAO; // Repositório ou DAO
-    private PacienteService pacienteService; // Camada de Serviço (se for usada)
+    private PacienteDAO pacienteDAO;
+    private PacienteService pacienteService;
 
     public PacienteController() {
-        // Simulação de injeção de dependência manual (igual ao AlunoController)
-        this.pacienteDAO = new PacienteDAO(); // Inicialize sua implementação real
-        // Dependências de Service são simplificadas aqui, mas manteremos o DAO para as buscas simples.
-        // this.pacienteService = new PacienteService(pacienteDAO, ...);
+        this.pacienteDAO = new PacienteDAO();
     }
 
     // --- GET 1: Buscar Todos os Pacientes ---
     @GET
     public Response buscarTodos() {
-        List<Paciente> pacientes = pacienteDAO.listarTodos(); // Método do DAO que lista tudo
+        List<Paciente> pacientes = pacienteDAO.listarTodos();
         Response.Status status = null;
 
         if (pacientes.isEmpty()) {
-            status = Response.Status.NOT_FOUND; // Ou NO_CONTENT (204) é uma alternativa comum
+            status = Response.Status.NOT_FOUND;
         } else {
             status = Response.Status.OK;
         }
