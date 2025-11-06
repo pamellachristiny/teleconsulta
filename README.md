@@ -1,66 +1,57 @@
-# getting-started
+# 🩺 Teleconsulta API RESTful - NEXUMTECH
+brach mais ultilizada: master
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+## 📝 Visão Geral do Projeto
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+Este projeto consiste em uma API RESTful desenvolvida em **Java** utilizando a especificação **JAX-RS (Jakarta RESTful Web Services)**. O objetivo é fornecer a camada de serviços para o sistema de agendamento de consultas médicas **NEXUMTECH**, gerenciando recursos como Consultas, Pacientes e Médicos.
 
-## Running the application in dev mode
+A arquitetura adota o padrão de **Três Camadas** (Controller, Service, DAO) para garantir a separação de responsabilidades e a aplicação das regras de negócio (como a verificação de conflito de horário).
 
-You can run your application in dev mode that enables live coding using:
+## 🚀 Tecnologias Utilizadas
 
-```shell script
-./mvnw quarkus:dev
-```
+| Tecnologia | Versão/Tipo | Função |
+| :--- | :--- | :--- |
+| **Linguagem** | Java (JDK 17+) | Desenvolvimento principal da aplicação. |
+| **Framework Web** | JAX-RS (Jakarta RESTful Web Services) | Construção da API RESTful (Camada Controller). |
+| **Gerenciador de Dependências**| Maven | Gestão de bibliotecas e automatização do build. |
+| **Banco de Dados** | Oracle Database (Via JDBC) | Persistência dos dados. |
+| **Implantação (Deploy)**| Render | Plataforma Cloud para hospedagem contínua (CI/CD). |
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+## 🏗️ Arquitetura e Camadas
 
-## Packaging and running the application
+| Camada | Classes Principais | Responsabilidade |
+| :--- | :--- | :--- |
+| **Controller** | `ConsultaController`, `PacienteController`, `MedicoController` | Recebe requisições HTTP, trata a serialização JSON e retorna as respostas (códigos HTTP). |
+| **Service** | `ConsultaService`, `PacienteService`, `MedicoService` | Implementa as **Regras de Negócio** (ex: lógica de agendamento, verificação de conflitos) e coordena a operação. |
+| **DAO/Infra** | `ConsultaDAO`, `ConnectionFactory`, etc. | Gerencia o acesso ao banco de dados (JDBC) e executa o CRUD (SQL). Utiliza `try-with-resources` para fechar conexões. |
+| **Domínio** | `Consulta`, `Paciente`, `Medico` | Entidades de negócio (POJOs). |
 
-The application can be packaged using:
+## ⚙️ Endpoints da API
 
-```shell script
-./mvnw package
-```
+A API é acessível através dos seguintes URIs:
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+| Recurso | Método HTTP | URI | Descrição |
+| :--- | :--- | :--- | :--- |
+| **Consulta** | `POST` | `/consultas` | Agenda uma nova consulta, aplicando regras de negócio (conflito de horário). |
+| **Consulta** | `GET` | `/consultas` | Lista todas as consultas agendadas. |
+| **Consulta** | `PUT` | `/consultas/{id}` | Atualiza uma consulta existente. |
+| **Consulta** | `DELETE` | `/consultas/{id}` | Cancela uma consulta pelo ID. |
+| **Paciente** | `POST` | `/pacientes` | Cadastra um novo paciente. |
+| **Médico** | `POST` | `/medicos` | Cadastra um novo médico. |
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+## ☁️ Configuração para Deploy (Render)
 
-If you want to build an _über-jar_, execute the following command:
+O projeto está configurado para ler as credenciais do banco de dados (Oracle) a partir de variáveis de ambiente.
 
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
-```
+1.  **Variáveis de Ambiente:** No painel do Render, as seguintes variáveis devem ser configuradas para o acesso ao Oracle.
+    * `DB_URL_ORACLE`: `jdbc:oracle:thin:@oracle.fiap.com.br:1521:ORCL`
+    * `DB_USER_ORACLE`: `[SEU RM]`
+    * `DB_PASSWORD_ORACLE`: `[SUA SENHA]`
+    * `PORT`: `8080`
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+2.  **Start Command:** O Render inicia a aplicação com o comando:
+    ```bash
+    java -jar target/teleconsulta-1.0-SNAPSHOT.jar
+    ```
 
-## Creating a native executable
-
-You can create a native executable using:
-
-```shell script
-./mvnw package -Dnative
-```
-
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
-
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
-```
-
-You can then execute your native executable with: `./target/getting-started-1.0.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
-
-## Related Guides
-
-- REST ([guide](https://quarkus.io/guides/rest)): A Jakarta REST implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
-
-## Provided Code
-
-### REST
-
-Easily start your REST Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+***Atenção:*** *Devido a restrições de rede, a conexão com o Oracle da FIAP pode falhar no ambiente Render, exigindo a migração para um banco de dados na nuvem (como PostgreSQL).*
