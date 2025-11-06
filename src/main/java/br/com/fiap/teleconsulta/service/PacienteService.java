@@ -52,7 +52,6 @@ public class PacienteService {
         if (paciente == null) {
             return false;
         }
-        // Se houver regras complexas de deleção (ex: verificar consultas), elas iriam aqui.
         pacienteDAO.deletar(id);
         return true;
     }
