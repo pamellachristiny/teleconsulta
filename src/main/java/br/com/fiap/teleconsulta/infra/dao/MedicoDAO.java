@@ -8,18 +8,12 @@ import java.util.List;
 
 public class MedicoDAO {
 
-    // [REMOVIDO] A variável 'private Connection conn;' e o construtor problemático.
-    // A conexão será obtida e fechada localmente em cada método.
-
     public MedicoDAO() {
-        // O construtor fica vazio, mantendo o padrão JAX-RS (inicia o DAO sem dependências no construtor)
     }
 
     // --- C (CREATE) - Inserir Medico ---
     public void inserir(Medico m) {
         String sql = "INSERT INTO MEDICO (CRM, NOME_MEDICO, ESPECIALIDADE_MEDICO) VALUES (?, ?, ?)";
-
-        // Uso de try-with-resources para obter a conexão e garantir o fechamento
         try (Connection conn = new ConnectionFactory().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -31,7 +25,6 @@ public class MedicoDAO {
 
         } catch (SQLException e) {
             System.err.println("Erro ao inserir médico: " + e.getMessage());
-            // Lançar RuntimeException é uma boa prática para DAOs
             throw new RuntimeException("Erro de persistência ao inserir Médico.", e);
         }
     }

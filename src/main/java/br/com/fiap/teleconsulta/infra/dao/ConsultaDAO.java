@@ -9,11 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConsultaDAO {
-
-    // [REMOVIDO] A variável 'private Connection conn;' e o construtor problemático.
-
     public ConsultaDAO() {
-        // Construtor vazio, como nos outros DAOs remodelados.
+
     }
 
     // --- C (CREATE) - Inserir nova consulta ---
