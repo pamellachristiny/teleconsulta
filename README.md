@@ -45,6 +45,7 @@ Cada fluxo tem regras de negócio específicas (válidações de horário, estad
 ---
 
 ## Endpoints (API REST)
+https://teleconsultajava.onrender.com
 
 A seguir, a tabela resumida com os recursos expostos pela API e os códigos de resposta esperados.
 
