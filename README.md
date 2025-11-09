@@ -4,22 +4,10 @@
 
 * **Projeto:** Ágata — Gerenciador de Teleconsultas
 * **Instituição / Marca:** NEXUMTECH
-* **Turmas:** 1TDSPY / 1TDSPW
+* **Turmas:** 1TDSPY
+* **Felipe Ribeiro Salles de Camargo - 565224
+Pamella Christiny Chaves Brito - 565206**
 * **Local e Ano:** São Paulo, 2025
-
----
-
-## Sumário
-
-1. [Objetivo e Escopo do Projeto](#objetivo-e-escopo-do-projeto)
-2. [Descrição das Funções](#descrição-das-funções)
-3. [Endpoints (API REST)](#endpoints-api-rest)
-4. [Modelo de Dados (MER) e UML](#modelo-de-dados-mer-e-uml)
-5. [Ferramentas, Linguagens e Bibliotecas](#ferramentas-linguagens-e-bibliotecas)
-6. [Guia de Execução (Passo a Passo)](#guia-de-execução-passo-a-passo)
-7. [Scripts SQL (Schema)](#scripts-sql-schema)
-8. [Observações Importantes](#observações-importantes)
-
 ---
 
 ## Objetivo e Escopo do Projeto
@@ -173,21 +161,6 @@ CREATE TABLE CONSULTA (
     CONSTRAINT FK_CONSULTA_PACIENTE FOREIGN KEY (ID_PACIENTE) REFERENCES PACIENTE(ID),
     CONSTRAINT FK_CONSULTA_MEDICO FOREIGN KEY (CRM_MEDICO) REFERENCES MEDICO(CRM)
 );
-```
 
----
-
-## Observações Importantes
-
-* **Regras de negócio:** Consulte `service/ConsultaService.java` para entender validações (conflitos de horário, atualização de status, duração mínima/máxima etc.).
-* **Tratamento de erros:** DAOs devem lançar exceções controladas (e o Controller deve traduzir para respostas HTTP adequadas).
-* **Testes:** Recomenda-se criar testes unitários para `ConsultaService` e testes de integração para os DAOs.
-* **Diagrama/Documentação adicional:** coloque imagens e diagramas na pasta `docs/` do repositório e referencie-os neste README.
-
----
-
-### Contato / Contribuição
-
-Se desejar contribuir ou precisa de ajuda para ajustar o README (por exemplo: incluir diagramas exportados, atualizar endpoints para versão `/api/v1` ou adicionar instruções de Docker), abra uma issue ou envie um pull request.
 
 *Arquivo gerado automaticamente — versão README atualizada para o projeto Ágata.*
