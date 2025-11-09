@@ -19,7 +19,7 @@ public class MedicoService {
      * @throws IllegalArgumentException se o CRM já existir.
      */
     public void adicionar(Medico medico) {
-        // Regra de Negócio Mínima: Verificar se o médico já existe (unicidade)
+        // Regra de Negócio Mínima: Verificar se o médico já existe
         if (medicoDAO.buscarPorCRM(medico.getCrm()) != null) {
             throw new IllegalArgumentException("Erro: O CRM " + medico.getCrm() + " já está cadastrado no sistema.");
         }
@@ -35,7 +35,7 @@ public class MedicoService {
     public Medico atualizar(Medico medico) {
         // Verifica se o médico existe antes de atualizar
         if (medicoDAO.buscarPorCRM(medico.getCrm()) == null) {
-            return null; // Retorna null para o Controller tratar como 404 NOT FOUND
+            return null;
         }
 
         medicoDAO.atualizar(medico);
@@ -52,7 +52,6 @@ public class MedicoService {
             return false;
         }
 
-        // Repassa a chamada para o DAO
         medicoDAO.deletar(crm);
         return true;
     }

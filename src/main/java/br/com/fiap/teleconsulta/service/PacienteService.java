@@ -35,10 +35,13 @@ public class PacienteService {
 
     /**
      * Atualiza os dados de um paciente existente.
-     * @param paciente O objeto Paciente com os dados atualizados (o ID/CPF deve ser válido).
+     * @param paciente O objeto Paciente com os dados atualizados (o ID deve ser válido).
+     * @return O objeto Paciente atualizado ou null se não for encontrado.
      */
     public Paciente atualizar(Paciente paciente) {
-        // Poderia haver mais validações aqui, mas mantemos o básico
+        if (pacienteDAO.buscarPorId(paciente.getId()) == null) {
+            return null;
+        }
         pacienteDAO.atualizar(paciente);
         return paciente;
     }
@@ -55,4 +58,5 @@ public class PacienteService {
         pacienteDAO.deletar(id);
         return true;
     }
+
 }

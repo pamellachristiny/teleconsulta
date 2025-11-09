@@ -81,4 +81,49 @@ public class MedicoController {
                 .entity(medico)
                 .build();
     }
+
+    @DELETE
+    @Path("/{crm}")
+    public Response deletarMedico(@PathParam("crm") String crm) {
+        boolean deletado = medicoService.deletar(crm);
+
+        if (deletado) {
+            // Retorna 204 No Content (sucesso sem corpo na resposta)
+            return Response.status(Response.Status.NO_CONTENT).build();
+        }
+
+        // Se o médico não foi encontrado para deletar, retorna 404 Not Found
+        return Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    // --- U (UPDATE) - Atualizar Medico ---
+    // PUT /medicos
+    @PUT
+    public Response atualizar(Medico medico) {
+        try {
+            // Chama o Service para realizar a atualização e verificar a existência
+            Medico medicoAtualizado = medicoService.atualizar(medico);
+
+            if (medicoAtualizado == null) {
+                // Se o Service retorna null, o recurso não existe. Retorna 404 Not Found.
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("Médico com CRM " + medico.getCrm() + " não encontrado para atualização.")
+                        .build();
+            }
+
+            // 200 OK: Retorna o objeto atualizado no corpo.
+            return Response.status(Response.Status.OK)
+                    .entity(medicoAtualizado)
+                    .build();
+
+        } catch (RuntimeException e) {
+            // Captura erros de persistência (RuntimeException relançada pelo DAO)
+            System.err.println("Erro interno ao atualizar médico: " + e.getMessage());
+            e.printStackTrace();
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro interno ao atualizar o médico: " + e.getMessage())
+                    .build();
+        }
+    }
 }

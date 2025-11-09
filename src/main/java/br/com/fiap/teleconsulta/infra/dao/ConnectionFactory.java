@@ -5,26 +5,24 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnectionFactory {
+    // Ajuste conforme seu BD
+    private static final String URL = "jdbc:postgresql://localhost:5432/teleconsulta";
+    private static final String USER = "seu_usuario";
+    private static final String PASS = "sua_senha";
+
+    static {
+        try {
+            Class.forName("org.postgresql.Driver"); // ou com.mysql.cj.Driver
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     public Connection getConnection() {
-        // Correto: Lendo os NOMES das variáveis de ambiente
-        String urlDeConexao = System.getenv("DB_URL_ORACLE");
-        String login = System.getenv("DB_USER_ORACLE");
-        String senha = System.getenv("DB_PASSWORD_ORACLE");
-
-        // 1. Verificação de Variáveis de Ambiente (Configuração)
-        if (urlDeConexao == null || login == null || senha == null) {
-            throw new RuntimeException("As variáveis de ambiente do Oracle (DB_URL_ORACLE, DB_USER_ORACLE, DB_PASSWORD_ORACLE) não foram configuradas no Render.");
-        }
-
         try {
-            // 2. Tenta a Conexão
-            return DriverManager.getConnection(urlDeConexao, login, senha);
-
+            return DriverManager.getConnection(URL, USER, PASS);
         } catch (SQLException e) {
-            System.err.println("Erro ao conectar ao banco de dados Oracle: " + e.getMessage());
-            // 3. Relança a exceção de conexão como uma exceção não checada (RuntimeException)
-            throw new RuntimeException("Erro de conexão com o banco de dados Oracle.", e);
+            throw new RuntimeException("Erro ao obter conexão com BD", e);
         }
     }
 }

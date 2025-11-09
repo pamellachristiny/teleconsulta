@@ -18,7 +18,6 @@ public class Consulta {
         this.duracao = duracao;
     }
 
-    // Construtor com id (para consultas já cadastradas)
     public Consulta(int id, Paciente paciente, Medico medico, Timestamp dataHora, String status, int duracao) {
         this.id = id;
         this.paciente = paciente;
