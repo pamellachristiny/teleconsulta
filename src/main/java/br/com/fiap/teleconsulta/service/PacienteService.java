@@ -23,7 +23,7 @@ public class PacienteService {
 
     /**
      * Atualiza os dados de um paciente existente.
-     * @throws RecursoNaoEncontradoException se o paciente não for encontrado.[
+     * @throws RecursoNaoEncontradoException se o paciente não for encontrado.
      */
     public Paciente atualizar(Paciente paciente) {
         Paciente pacienteAtualizado = pacienteDAO.atualizar(paciente);
