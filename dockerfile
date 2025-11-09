@@ -3,11 +3,11 @@ FROM maven:3.9.4-eclipse-temurin-17 AS build
 
 WORKDIR /app
 
-# Copia os arquivos do Maven e baixa dependências primeiro (cache)
+# Copia o arquivo de configuração do Maven e baixa dependências (cache)
 COPY pom.xml .
 RUN mvn dependency:go-offline -B
 
-# Copia o código-fonte
+# Copia o código-fonte da aplicação
 COPY src ./src
 
 # Compila o projeto e empacota o JAR
@@ -18,11 +18,11 @@ FROM eclipse-temurin:17-jdk
 
 WORKDIR /app
 
-# Copia o JAR do estágio de build
+# Copia o JAR gerado do estágio de build
 COPY --from=build /app/target/biblioteca-1.0.0-SNAPSHOT.jar app.jar
 
-# Expõe a porta (ajuste se necessário)
+# Define a porta exposta (Render usará esta)
 EXPOSE 8080
 
-# Comando de inicialização
+# Comando para rodar o aplicativo
 CMD ["java", "-jar", "app.jar"]
