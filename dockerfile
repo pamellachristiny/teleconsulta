@@ -1,5 +1,5 @@
 # Usa uma imagem base Java com Maven para o build
-FROM maven:3.8.6-jdk-17 AS build
+FROM maven:3.8.6-openjdk-17 AS build
 WORKDIR /app
 # Copia o pom.xml para instalar dependências
 COPY pom.xml .
@@ -8,11 +8,10 @@ RUN mvn dependency:go-offline
 COPY src ./src
 # Executa a compilação final, criando o JAR
 RUN mvn clean install -DskipTests
-
 # Usa uma imagem base Java mais leve para rodar a aplicação
-FROM eclipse-temurin:17-jre-focal
+FROM openjdk:17-jre-slim
 WORKDIR /app
 # Copia o JAR do estágio de build
 COPY --from=build /app/target/teleconsulta-1.0-SNAPSHOT.jar teleconsulta.jar
-
+# Define o comando de inicialização
 CMD ["java", "-jar", "teleconsulta.jar"]
