@@ -1,28 +1,23 @@
-# Etapa 1 - Build da aplicação
-FROM maven:3.9.4-eclipse-temurin-17 AS build
-
+# Estágio 1: Build - Usa Eclipse Temurin JDK 17
+FROM eclipse-temurin:17-jdk-focal AS build
 WORKDIR /app
 
-# Copia o arquivo de configuração do Maven e baixa dependências (cache)
+# Instala o Maven manualmente, pois a tag combinada estava falhando
+RUN apt-get update && apt-get install -y maven && rm -rf /var/lib/apt/lists/*
+
+# Copia o pom.xml para instalar dependências
 COPY pom.xml .
-RUN mvn dependency:go-offline -B
+RUN mvn dependency:go-offline
 
-# Copia o código-fonte da aplicação
+# Copia todo o código fonte
 COPY src ./src
+# Executa a compilação final, criando o JAR
+RUN mvn clean install -DskipTests
 
-# Compila o projeto e empacota o JAR
-RUN mvn clean package -DskipTests
-
-# Etapa 2 - Imagem final de execução
-FROM eclipse-temurin:17-jdk
-
+# Estágio 2: Run - Usa Eclipse Temurin JRE 17 (muito mais leve para rodar)
+FROM eclipse-temurin:17-jre-focal
 WORKDIR /app
-
-# Copia o JAR gerado do estágio de build
-COPY --from=build /app/target/biblioteca-1.0.0-SNAPSHOT.jar app.jar
-
-# Define a porta exposta (Render usará esta)
-EXPOSE 8080
-
-# Comando para rodar o aplicativo
-CMD ["java", "-jar", "app.jar"]
+# Copia o JAR do estágio de build
+COPY --from=build /app/target/teleconsulta-1.0-SNAPSHOT.jar teleconsulta.jar
+# Define o comando de inicialização
+CMD ["java", "-jar", "teleconsulta.jar"]
