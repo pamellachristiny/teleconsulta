@@ -1,15 +1,20 @@
-# Estágio 1: Build (Usando uma tag Maven 3.9.5 e OpenJDK 17 slim)
-FROM maven:3.9.5-openjdk-17-slim AS build
+# Estágio 1: Build - Usa Eclipse Temurin JDK 17
+FROM eclipse-temurin:17-jdk-focal AS build
 WORKDIR /app
+
+# Instala o Maven manualmente, pois a tag combinada estava falhando
+RUN apt-get update && apt-get install -y maven && rm -rf /var/lib/apt/lists/*
+
 # Copia o pom.xml para instalar dependências
 COPY pom.xml .
 RUN mvn dependency:go-offline
+
 # Copia todo o código fonte
 COPY src ./src
 # Executa a compilação final, criando o JAR
 RUN mvn clean install -DskipTests
 
-# Estágio 2: Run (Usando Eclipse Temurin, que é leve e estável para JRE 17)
+# Estágio 2: Run - Usa Eclipse Temurin JRE 17 (muito mais leve para rodar)
 FROM eclipse-temurin:17-jre-focal
 WORKDIR /app
 # Copia o JAR do estágio de build
