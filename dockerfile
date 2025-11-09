@@ -13,7 +13,7 @@ RUN mvn clean install -DskipTests
 # Estágio 2: Run - Usa Eclipse Temurin JRE 17 (muito mais leve para rodar)
 FROM eclipse-temurin:17-jre-focal
 WORKDIR /app
-# CORREÇÃO FINAL: Copia o JAR com o nome correto (biblioteca) e renomeia para teleconsulta.jar para o CMD
+# CORREÇÃO CRUCIAL (LINHA 20): Copia o JAR com o nome 'biblioteca' e renomeia para 'teleconsulta.jar'
 COPY --from=build /app/target/biblioteca-1.0.0-SNAPSHOT.jar teleconsulta.jar
 # Define o comando de inicialização
 CMD ["java", "-jar", "teleconsulta.jar"]
