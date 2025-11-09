@@ -1,5 +1,4 @@
-# Ágata — Assistente Guiada por Áudio para TeleAgendamentos (README)
-
+# Ágata —
 ## Identificação do Projeto e Equipe
 
 * **Projeto:** Ágata — Gerenciador de Teleconsultas
