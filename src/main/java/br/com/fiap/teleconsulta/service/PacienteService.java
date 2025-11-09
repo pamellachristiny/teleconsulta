@@ -1,62 +1,57 @@
 package br.com.fiap.teleconsulta.service;
 
-import br.com.fiap.teleconsulta.dominio.Paciente; // Assumindo que a classe Paciente está aqui
-import br.com.fiap.teleconsulta.infra.dao.PacienteDAO; // Usaremos o DAO diretamente
+import br.com.fiap.teleconsulta.dominio.Paciente;
+import br.com.fiap.teleconsulta.infra.dao.PacienteDAO;
+import br.com.fiap.teleconsulta.exececao.RecursoNaoEncontradoException; // Importado
+import jakarta.enterprise.context.ApplicationScoped; // CDI
+import jakarta.inject.Inject; // CDI
+
 import java.util.List;
 
+@ApplicationScoped
 public class PacienteService {
 
+    @Inject
     private PacienteDAO pacienteDAO;
 
-    public PacienteService(PacienteDAO pacienteDAO) {
-        this.pacienteDAO = pacienteDAO;
-    }
-
     /**
-     * Adiciona um novo paciente, validando apenas se o CPF já existe.
-     * @param paciente O objeto Paciente a ser adicionado.
-     * @throws IllegalArgumentException se o CPF já estiver cadastrado.
+     * Adiciona um novo paciente. (Sem regra de CPF duplicado, conforme solicitado)
      */
     public void adicionar(Paciente paciente) {
-        // Regra de Negócio Mínima: Garantir Unicidade do CPF antes de salvar
-        if (pacienteDAO.cpfExiste(paciente.getCpf())) {
-            throw new IllegalArgumentException("Erro: O CPF " + paciente.getCpf() + " já está cadastrado no sistema.");
-        }
-
         pacienteDAO.inserir(paciente);
     }
 
     /**
-     * Busca todos os pacientes.
-     */
-    public List<Paciente> buscarTodos() {
-        return pacienteDAO.listarTodos();
-    }
-
-    /**
      * Atualiza os dados de um paciente existente.
-     * @param paciente O objeto Paciente com os dados atualizados (o ID deve ser válido).
-     * @return O objeto Paciente atualizado ou null se não for encontrado.
+     * @throws RecursoNaoEncontradoException se o paciente não for encontrado.
      */
     public Paciente atualizar(Paciente paciente) {
-        if (pacienteDAO.buscarPorId(paciente.getId()) == null) {
-            return null;
+        Paciente pacienteAtualizado = pacienteDAO.atualizar(paciente);
+
+        // Se o DAO retorna null, o recurso não existe, lança 404
+        if (pacienteAtualizado == null) {
+            throw new RecursoNaoEncontradoException("Paciente com CPF " + paciente.getCpf() + " não encontrado para atualização.");
         }
-        pacienteDAO.atualizar(paciente);
-        return paciente;
+
+        return pacienteAtualizado;
     }
 
     /**
-     * Deleta um paciente por ID.
-     * @return true se o paciente foi deletado, false caso contrário.
+     * Deleta um paciente por CPF.
+     * @throws RecursoNaoEncontradoException se o paciente não for encontrado.
      */
-    public boolean deletar(int id) {
-        Paciente paciente = pacienteDAO.buscarPorId(id);
-        if (paciente == null) {
-            return false;
+    public void deletar(String cpf) {
+        // Se o DAO.deletar retornar false (não deletou nada), o recurso não foi encontrado
+        if (!pacienteDAO.deletar(cpf)) {
+            throw new RecursoNaoEncontradoException("Paciente com CPF " + cpf + " não encontrado para exclusão.");
         }
-        pacienteDAO.deletar(id);
-        return true;
     }
 
+    public List<Paciente> buscarTodos() {
+        return pacienteDAO.buscarTodos();
+    }
+
+    public Paciente buscarPorCpf(String cpf) {
+        return pacienteDAO.buscarPorCPF(cpf);
+    }
 }

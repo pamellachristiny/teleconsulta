@@ -2,7 +2,7 @@ package br.com.fiap.teleconsulta.controller;
 
 import br.com.fiap.teleconsulta.dominio.Medico;
 import br.com.fiap.teleconsulta.service.MedicoService;
-import br.com.fiap.teleconsulta.excecao.RecursoNaoEncontradoException; // Importado
+import br.com.fiap.teleconsulta.exececao.RecursoNaoEncontradoException; // [CORRIGIDO] Importação do pacote 'exececao'
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -15,12 +15,12 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 public class MedicoController {
 
-    @Inject // [CORREÇÃO CDI] Injeta a instância de MedicoService
+    @Inject
     private MedicoService medicoService;
 
-    // Construtor manual removido
+    // Métodos Inserir/POST
 
-    // --- C (CREATE) - Criar um novo Medico ---
+    // [MÉTODO ANTERIORMENTE CORRIGIDO]
     @POST
     public Response inserir(Medico medico) {
         try {
@@ -38,7 +38,8 @@ public class MedicoController {
         }
     }
 
-    // --- R (READ) - Buscar todos os Medicos
+    // Métodos GET/Buscar
+
     @GET
     public Response buscarTodos() {
         List<Medico> medicos = medicoService.buscarTodos();
@@ -47,13 +48,9 @@ public class MedicoController {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        return Response
-                .status(Response.Status.OK)
-                .entity(medicos)
-                .build();
+        return Response.ok(medicos).build();
     }
 
-    // --- R (READ) - Buscar Medico por CRM
     @GET
     @Path("/{crm}")
     public Response buscarPorCrm(@PathParam("crm") String crm) {
@@ -63,42 +60,35 @@ public class MedicoController {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        return Response
-                .status(Response.Status.OK)
-                .entity(medico)
-                .build();
+        return Response.ok(medico).build();
     }
+
+    // Métodos DELETE/Deletar
 
     @DELETE
     @Path("/{crm}")
     public Response deletarMedico(@PathParam("crm") String crm) {
-        boolean deletado = medicoService.deletar(crm);
-
-        if (deletado) {
+        try {
+            // Se o Service não encontrou o médico, ele lançará a exceção.
+            medicoService.deletar(crm);
             return Response.status(Response.Status.NO_CONTENT).build();
+        } catch (RecursoNaoEncontradoException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         }
-
-        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
-    // --- U (UPDATE) - Atualizar Medico ---
+    // Métodos PUT/Atualizar
+
     @PUT
     public Response atualizar(Medico medico) {
         try {
-            // [TRATAMENTO DE EXCEÇÃO] Chama o Service; se não encontrar, lança RecursoNaoEncontradoException.
             Medico medicoAtualizado = medicoService.atualizar(medico);
-
-            // Se chegou aqui, deu certo. Retorna 200 OK.
-            return Response.status(Response.Status.OK)
-                    .entity(medicoAtualizado)
-                    .build();
-
-            // [CORREÇÃO] Captura a exceção de negócio e mapeia para 404 Not Found.
+            return Response.ok(medicoAtualizado).build();
         } catch (RecursoNaoEncontradoException e) {
+            // [LINHA DO ERRO 97] O try-catch agora reconhece a exceção importada
             return Response.status(Response.Status.NOT_FOUND)
                     .entity(e.getMessage())
                     .build();
-
         } catch (RuntimeException e) {
             System.err.println("Erro interno ao atualizar médico: " + e.getMessage());
             e.printStackTrace();

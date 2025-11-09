@@ -1,13 +1,9 @@
-package br.com.fiap.teleconsulta.excecao;
+package br.com.fiap.teleconsulta.exececao;
 
 public class RecursoNaoEncontradoException extends RuntimeException {
 
+    // Construtor padrão que recebe a mensagem de erro
     public RecursoNaoEncontradoException(String mensagem) {
         super(mensagem);
-    }
-
-    // Construtor para casos em que você quer passar a causa
-    public RecursoNaoEncontradoException(String mensagem, Throwable causa) {
-        super(mensagem, causa);
     }
 }
