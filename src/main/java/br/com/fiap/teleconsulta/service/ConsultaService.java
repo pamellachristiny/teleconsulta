@@ -48,17 +48,17 @@ public class ConsultaService {
         return true;
     }
 
-        /**
-         * Atualiza os dados de uma consulta existente.
-         * @param consulta O objeto Consulta com os dados atualizados (o ID deve ser válido).
-         * @return O objeto Consulta atualizado ou null se não for encontrado.
-         */
-        public Consulta atualizar(Consulta consulta) {
-            // Verifica se o registro existe no banco de dados
-            if (consultaDAO.buscarPorId(consulta.getId()) == null) {
-                return null;
-            }
-            consultaDAO.atualizar(consulta);
-            return consulta;
+    /**
+     * Atualiza os dados de uma consulta existente.
+     * @param consulta O objeto Consulta com os dados atualizados (o ID deve ser válido).
+     * @return O objeto Consulta atualizado ou null se não for encontrado.
+     */
+    public Consulta atualizar(Consulta consulta) {
+        // Verifica se o registro existe no banco de dados
+        if (consultaDAO.buscarPorId(consulta.getId()) == null) {
+            return null;
         }
+        consultaDAO.atualizar(consulta);
+        return consulta;
+    }
 }

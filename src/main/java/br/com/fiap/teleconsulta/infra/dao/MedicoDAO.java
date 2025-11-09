@@ -1,12 +1,16 @@
 package br.com.fiap.teleconsulta.infra.dao;
 
 import br.com.fiap.teleconsulta.dominio.Medico;
+import jakarta.enterprise.context.ApplicationScoped; // Adicione esta importação
 
 import java.util.ArrayList;
 import java.util.List;
 
+// [CORREÇÃO] Anotação para que o Quarkus gerencie e crie esta instância
+@ApplicationScoped
 public class MedicoDAO {
 
+    // Simulação de banco de dados em memória
     private static final List<Medico> medicos = new ArrayList<>();
 
     public List<Medico> buscarTodos() {

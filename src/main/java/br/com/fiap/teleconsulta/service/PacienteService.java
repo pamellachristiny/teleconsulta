@@ -1,35 +1,62 @@
 package br.com.fiap.teleconsulta.service;
 
-import br.com.fiap.teleconsulta.dominio.Paciente;
-import br.com.fiap.teleconsulta.infra.dao.PacienteDAO;
-
+import br.com.fiap.teleconsulta.dominio.Paciente; // Assumindo que a classe Paciente está aqui
+import br.com.fiap.teleconsulta.infra.dao.PacienteDAO; // Usaremos o DAO diretamente
 import java.util.List;
 
 public class PacienteService {
 
-    private final PacienteDAO pacienteDAO;
+    private PacienteDAO pacienteDAO;
 
-    public PacienteService() {
-        this.pacienteDAO = new PacienteDAO(); // ✅ construtor padrão
+    public PacienteService(PacienteDAO pacienteDAO) {
+        this.pacienteDAO = pacienteDAO;
     }
 
-    public List<Paciente> buscarTodos() {
-        return pacienteDAO.buscarTodos();
-    }
+    /**
+     * Adiciona um novo paciente, validando apenas se o CPF já existe.
+     * @param paciente O objeto Paciente a ser adicionado.
+     * @throws IllegalArgumentException se o CPF já estiver cadastrado.
+     */
+    public void adicionar(Paciente paciente) {
+        // Regra de Negócio Mínima: Garantir Unicidade do CPF antes de salvar
+        if (pacienteDAO.cpfExiste(paciente.getCpf())) {
+            throw new IllegalArgumentException("Erro: O CPF " + paciente.getCpf() + " já está cadastrado no sistema.");
+        }
 
-    public Paciente buscarPorId(int id) {
-        return pacienteDAO.buscarPorId(id);
-    }
-
-    public void cadastrar(Paciente paciente) {
         pacienteDAO.inserir(paciente);
     }
 
-    public boolean deletar(int id) {
-        return pacienteDAO.deletar(id);
+    /**
+     * Busca todos os pacientes.
+     */
+    public List<Paciente> buscarTodos() {
+        return pacienteDAO.listarTodos();
     }
 
+    /**
+     * Atualiza os dados de um paciente existente.
+     * @param paciente O objeto Paciente com os dados atualizados (o ID deve ser válido).
+     * @return O objeto Paciente atualizado ou null se não for encontrado.
+     */
     public Paciente atualizar(Paciente paciente) {
-        return pacienteDAO.atualizar(paciente);
+        if (pacienteDAO.buscarPorId(paciente.getId()) == null) {
+            return null;
+        }
+        pacienteDAO.atualizar(paciente);
+        return paciente;
     }
+
+    /**
+     * Deleta um paciente por ID.
+     * @return true se o paciente foi deletado, false caso contrário.
+     */
+    public boolean deletar(int id) {
+        Paciente paciente = pacienteDAO.buscarPorId(id);
+        if (paciente == null) {
+            return false;
+        }
+        pacienteDAO.deletar(id);
+        return true;
+    }
+
 }
