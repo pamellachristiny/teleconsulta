@@ -1,19 +1,28 @@
-# Estágio 1: Build - Usa a imagem oficial do Maven com JDK 17 (Compatível com Quarkus)
-FROM maven:3.9.6-eclipse-temurin-17 AS build
+# Etapa 1 - Build da aplicação
+FROM maven:3.9.4-eclipse-temurin-17 AS build
+
 WORKDIR /app
 
-# Copia o pom.xml para instalar dependências
+# Copia os arquivos do Maven e baixa dependências primeiro (cache)
 COPY pom.xml .
-RUN mvn dependency:go-offline
-# Copia todo o código fonte
-COPY src ./src
-# Executa a compilação final, criando o JAR
-RUN mvn clean install -DskipTests
+RUN mvn dependency:go-offline -B
 
-# Estágio 2: Run - Usa Eclipse Temurin JRE 17 (muito mais leve para rodar)
-FROM eclipse-temurin:17-jre-focal
+# Copia o código-fonte
+COPY src ./src
+
+# Compila o projeto e empacota o JAR
+RUN mvn clean package -DskipTests
+
+# Etapa 2 - Imagem final de execução
+FROM eclipse-temurin:17-jdk
+
 WORKDIR /app
-# CORREÇÃO CRUCIAL (LINHA 20): Copia o JAR com o nome 'biblioteca' e renomeia para 'teleconsulta.jar'
-COPY --from=build /app/target/biblioteca-1.0.0-SNAPSHOT.jar teleconsulta.jar
-# Define o comando de inicialização
-CMD ["java", "-jar", "teleconsulta.jar"]
+
+# Copia o JAR do estágio de build
+COPY --from=build /app/target/biblioteca-1.0.0-SNAPSHOT.jar app.jar
+
+# Expõe a porta (ajuste se necessário)
+EXPOSE 8080
+
+# Comando de inicialização
+CMD ["java", "-jar", "app.jar"]

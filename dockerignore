@@ -1,0 +1,10 @@
+# Ignora arquivos e pastas desnecessários no build
+target/
+.git
+.gitignore
+README.md
+Dockerfile
+*.log
+.idea/
+.vscode/
+*.iml
