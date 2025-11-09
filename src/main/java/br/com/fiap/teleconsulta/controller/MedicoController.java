@@ -85,7 +85,6 @@ public class MedicoController {
             Medico medicoAtualizado = medicoService.atualizar(medico);
             return Response.ok(medicoAtualizado).build();
         } catch (RecursoNaoEncontradoException e) {
-            // [LINHA DO ERRO 97] O try-catch agora reconhece a exceção importada
             return Response.status(Response.Status.NOT_FOUND)
                     .entity(e.getMessage())
                     .build();

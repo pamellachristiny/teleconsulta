@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnectionFactory {
-    // Ajuste conforme seu BD
     private static final String URL = "jdbc:postgresql://localhost:5432/teleconsulta";
     private static final String USER = "seu_usuario";
     private static final String PASS = "sua_senha";

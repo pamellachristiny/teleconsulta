@@ -3,8 +3,8 @@ package br.com.fiap.teleconsulta.service;
 import br.com.fiap.teleconsulta.dominio.Paciente;
 import br.com.fiap.teleconsulta.infra.dao.PacienteDAO;
 import br.com.fiap.teleconsulta.exececao.RecursoNaoEncontradoException; // Importado
-import jakarta.enterprise.context.ApplicationScoped; // CDI
-import jakarta.inject.Inject; // CDI
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import java.util.List;
 
@@ -23,12 +23,11 @@ public class PacienteService {
 
     /**
      * Atualiza os dados de um paciente existente.
-     * @throws RecursoNaoEncontradoException se o paciente não for encontrado.
+     * @throws RecursoNaoEncontradoException se o paciente não for encontrado.[
      */
     public Paciente atualizar(Paciente paciente) {
         Paciente pacienteAtualizado = pacienteDAO.atualizar(paciente);
 
-        // Se o DAO retorna null, o recurso não existe, lança 404
         if (pacienteAtualizado == null) {
             throw new RecursoNaoEncontradoException("Paciente com CPF " + paciente.getCpf() + " não encontrado para atualização.");
         }
@@ -41,7 +40,6 @@ public class PacienteService {
      * @throws RecursoNaoEncontradoException se o paciente não for encontrado.
      */
     public void deletar(String cpf) {
-        // Se o DAO.deletar retornar false (não deletou nada), o recurso não foi encontrado
         if (!pacienteDAO.deletar(cpf)) {
             throw new RecursoNaoEncontradoException("Paciente com CPF " + cpf + " não encontrado para exclusão.");
         }

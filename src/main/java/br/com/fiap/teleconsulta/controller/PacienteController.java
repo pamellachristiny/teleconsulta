@@ -40,7 +40,6 @@ public class PacienteController {
     // --- R (READ) - Buscar Todos ---
     @GET
     public Response buscarTodos() {
-        // [CORRIGIDO] Chamando o Service
         List<Paciente> pacientes = pacienteService.buscarTodos();
 
         if (pacientes == null || pacientes.isEmpty()) {
@@ -54,7 +53,6 @@ public class PacienteController {
     @GET
     @Path("/{cpf}")
     public Response buscarPorCpf(@PathParam("cpf") String cpf) {
-        // [CORRIGIDO] Chamando o Service com String CPF.
         Paciente paciente = pacienteService.buscarPorCpf(cpf);
 
         if (paciente == null) {
@@ -69,7 +67,6 @@ public class PacienteController {
     @Path("/{cpf}")
     public Response deletarPaciente(@PathParam("cpf") String cpf) {
         try {
-            // [CORRIGIDO] Chamando o Service. O Service lança a exceção.
             pacienteService.deletar(cpf);
             return Response.status(Response.Status.NO_CONTENT).build();
 
@@ -82,7 +79,6 @@ public class PacienteController {
     @PUT
     public Response atualizar(Paciente paciente) {
         try {
-            // [CORRIGIDO] Chamando o Service. O Service lança a exceção.
             Paciente pacienteAtualizado = pacienteService.atualizar(paciente);
             return Response.ok(pacienteAtualizado).build();
 

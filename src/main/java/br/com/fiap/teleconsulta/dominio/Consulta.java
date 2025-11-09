@@ -8,7 +8,7 @@ public class Consulta {
     private Medico medico;
     private Timestamp dataHora;
     private String status;
-    private int duracao; // duração em minutos, por exemplo
+    private int duracao;
 
     public Consulta(Paciente paciente, Medico medico, Timestamp dataHora, String status, int duracao) {
         this.paciente = paciente;

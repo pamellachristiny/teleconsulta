@@ -2,25 +2,17 @@ package br.com.fiap.teleconsulta.service;
 
 import br.com.fiap.teleconsulta.dominio.Medico;
 import br.com.fiap.teleconsulta.infra.dao.MedicoDAO;
-import jakarta.enterprise.context.ApplicationScoped; // Adicione esta importação
-import jakarta.inject.Inject; // Adicione esta importação
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import java.util.List;
 
-// [CORREÇÃO] Anotação para que o Quarkus gerencie e crie esta instância
 @ApplicationScoped
 public class MedicoService {
 
-    // [CORREÇÃO] O Quarkus/CDI injeta o objeto MedicoDAO aqui.
     @Inject
     private MedicoDAO medicoDAO;
 
-    // [CORREÇÃO] O construtor manual foi REMOVIDO ou ANOTADO com @Inject
-    // (Se o construtor for removido, o CDI usa o construtor default e injeta via campo)
-
-    // public MedicoService(MedicoDAO medicoDAO) {
-    //     this.medicoDAO = medicoDAO;
-    // }
 
     /**
      * Adiciona um novo médico, validando se o CRM já está cadastrado.
@@ -65,7 +57,6 @@ public class MedicoService {
         return true;
     }
     public List<Medico> buscarTodos() {
-        // [ATENÇÃO] Verifique se o nome do método em MedicoDAO é 'buscarTodos'
         return medicoDAO.buscarTodos();
     }
 
