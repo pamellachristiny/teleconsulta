@@ -12,6 +12,7 @@ import java.util.List;
 @Path("/consultas")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+
 public class ConsultaController {
 
     private ConsultaService consultaService;
@@ -26,11 +27,11 @@ public class ConsultaController {
         try {
             // A regra de negócio (verificação de horário) está no Service.
             consultaService.agendar(consulta);
-            // 201 Created: Retorna sucesso sem corpo.
+            // 201 Created
             return Response.status(Response.Status.CREATED).build();
 
         } catch (IllegalArgumentException e) {
-            // 409: Indica que a requisição não pode ser concluída devido a um conflito.
+            // 409: não pode ser concluída devido a um conflito.
             System.err.println("Conflito de agendamento: " + e.getMessage());
             return Response.status(Response.Status.CONFLICT).entity(e.getMessage()).build();
 
@@ -69,7 +70,36 @@ public class ConsultaController {
             return Response.status(Response.Status.NOT_FOUND).entity("Consulta com ID " + id + " não encontrada para cancelamento.").build();
         }
 
-        // 204 No Content: Resposta padrão para deleção bem-sucedida sem corpo de resposta.
+        // 204 No Content
         return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
+    // --- U (UPDATE) - Atualizar Consulta ---
+    // PUT /consultas
+    @PUT
+    public Response atualizar(Consulta consulta) {
+        try {
+            Consulta consultaAtualizada = consultaService.atualizar(consulta);
+
+            if (consultaAtualizada == null) {
+                // 404 Not Found
+                return Response.status(Response.Status.NOT_FOUND).entity("Consulta com ID " + consulta.getId() + " não encontrada para atualização.").build();
+            }
+
+            // 200 OK
+            return Response.ok(consultaAtualizada).build();
+
+        } catch (IllegalArgumentException e) {
+            System.err.println("Erro de atualização: " + e.getMessage());
+            return Response.status(Response.Status.CONFLICT).entity(e.getMessage()).build();
+
+        } catch (RuntimeException e) {
+            System.err.println("Erro interno ao atualizar: " + e.getMessage());
+            e.printStackTrace();
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro interno ao atualizar a consulta: " + e.getMessage())
+                    .build();
+        }
     }
 }

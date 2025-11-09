@@ -13,14 +13,7 @@ public class ConsultaService {
         this.consultaDAO = consultaDAO;
     }
 
-    /**
-     * Adiciona uma nova consulta após aplicar as regras de negócio (disponibilidade).
-     * @param consulta O objeto Consulta a ser agendado.
-     * @throws IllegalArgumentException se o horário estiver indisponível.
-     */
     public void agendar(Consulta consulta) {
-
-        //1. Regra de Negócio: Verificação de Conflito com Paciente
         Date dataConsulta = Date.valueOf(consulta.getDataHora().toLocalDateTime().toLocalDate());
 
         if (consultaDAO.pacienteTemConsultaNoDia(consulta.getPaciente().getId(), dataConsulta)) {
@@ -28,8 +21,6 @@ public class ConsultaService {
                     "Erro: O paciente já possui uma consulta agendada para o dia " + dataConsulta + "."
             );
         }
-
-        // 2. Regra de Negócio: Verificação de Conflito com Médico
         Timestamp dataHoraConsulta = consulta.getDataHora();
 
         if (consultaDAO.medicoTemConsultaNoHorario(consulta.getMedico().getCrm(), dataHoraConsulta)) {
@@ -53,9 +44,21 @@ public class ConsultaService {
         if (consulta == null) {
             return false;
         }
-
-        // Se passar nas regras de negócio, repassa para o DAO
         consultaDAO.deletar(id);
         return true;
     }
+
+        /**
+         * Atualiza os dados de uma consulta existente.
+         * @param consulta O objeto Consulta com os dados atualizados (o ID deve ser válido).
+         * @return O objeto Consulta atualizado ou null se não for encontrado.
+         */
+        public Consulta atualizar(Consulta consulta) {
+            // Verifica se o registro existe no banco de dados
+            if (consultaDAO.buscarPorId(consulta.getId()) == null) {
+                return null;
+            }
+            consultaDAO.atualizar(consulta);
+            return consulta;
+        }
 }

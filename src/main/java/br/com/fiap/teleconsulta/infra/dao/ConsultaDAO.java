@@ -165,4 +165,28 @@ public class ConsultaDAO {
         }
         return false;
     }
+
+    // --- U (UPDATE) - Atualizar uma consulta existente ---
+    public void atualizar(Consulta c) {
+        String sql = "UPDATE CONSULTA SET ID_PACIENTE = ?, CRM_MEDICO = ?, DATA_HORA_CONSULTA = ?, STATUS = ?, DURACAO = ? WHERE ID = ?";
+
+        try (Connection conn = new ConnectionFactory().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, c.getPaciente().getId());
+            ps.setString(2, c.getMedico().getCrm());
+            ps.setTimestamp(3, c.getDataHora());
+            ps.setString(4, c.getStatus());
+            ps.setInt(5, c.getDuracao());
+            ps.setInt(6, c.getId());
+            if (ps.executeUpdate() == 0) {
+                throw new RuntimeException("Erro: Nenhuma consulta encontrada com ID " + c.getId() + " para atualização.");
+            }
+            System.out.println("Consulta atualizada com sucesso!");
+
+        } catch (SQLException e) {
+            System.err.println("Erro ao atualizar consulta: " + e.getMessage());
+            throw new RuntimeException("Erro de persistência ao atualizar Consulta.", e);
+        }
+    }
 }
