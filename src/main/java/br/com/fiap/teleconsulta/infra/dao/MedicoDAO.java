@@ -1,13 +1,12 @@
 package br.com.fiap.teleconsulta.infra.dao;
 
 import br.com.fiap.teleconsulta.dominio.Medico;
-import jakarta.enterprise.context.ApplicationScoped; // Adicione esta importação
+import jakarta.enterprise.context.ApplicationScoped; // Necessário para Injeção de Dependência (CDI/Quarkus)
 
 import java.util.ArrayList;
 import java.util.List;
 
-// [CORREÇÃO] Anotação para que o Quarkus gerencie e crie esta instância
-@ApplicationScoped
+@ApplicationScoped // Torna o DAO gerenciado e injetável
 public class MedicoDAO {
 
     // Simulação de banco de dados em memória
@@ -39,6 +38,7 @@ public class MedicoDAO {
                 return medico;
             }
         }
+        // Retorna null se não encontrou para que o Service possa lançar a exceção
         return null;
     }
 }
