@@ -1,14 +1,13 @@
-# Estágio 1: Build - Usa Eclipse Temurin JDK 17
-FROM eclipse-temurin:17-jdk-focal AS build
+# Estágio 1: Build - Usamos uma tag oficial do Maven com JDK 17
+# Essa tag garante que o Maven seja compatível com o Quarkus
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
 
-# Instala o Maven manualmente, pois a tag combinada estava falhando
-RUN apt-get update && apt-get install -y maven && rm -rf /var/lib/apt/lists/*
+# Você pode remover a linha "RUN apt-get update && apt-get install -y maven..."
 
 # Copia o pom.xml para instalar dependências
 COPY pom.xml .
 RUN mvn dependency:go-offline
-
 # Copia todo o código fonte
 COPY src ./src
 # Executa a compilação final, criando o JAR
