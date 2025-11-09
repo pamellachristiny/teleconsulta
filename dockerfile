@@ -14,5 +14,5 @@ FROM eclipse-temurin:17-jre-focal
 WORKDIR /app
 # Copia o JAR do estágio de build
 COPY --from=build /app/target/teleconsulta-1.0-SNAPSHOT.jar teleconsulta.jar
-# Define o comando de inicialização
+
 CMD ["java", "-jar", "teleconsulta.jar"]
