@@ -144,7 +144,6 @@
         </plugins>
     </build>
 
-    <!-- Perfil para build nativo (opcional) -->
     <profiles>
         <profile>
             <id>native</id>
